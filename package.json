@@ -1,0 +1,22 @@
+{
+  "name": "slingshot-dota2-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ArturMoczulski/slingshot-dota2-bot.git"
+  },
+  "author": "Artur Moczulski",
+  "license": "propertiary",
+  "bugs": {
+    "url": "https://github.com/ArturMoczulski/slingshot-dota2-bot/issues"
+  },
+  "homepage": "https://github.com/ArturMoczulski/slingshot-dota2-bot",
+  "dependencies": {
+    "dota2": "git://github.com/RJacksonm1/node-dota2"
+  }
+}
