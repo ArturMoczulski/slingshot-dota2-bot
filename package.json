@@ -18,6 +18,7 @@
   "homepage": "https://github.com/ArturMoczulski/slingshot-dota2-bot",
   "dependencies": {
     "dota2": "git://github.com/RJacksonm1/node-dota2",
+    "jasmine": "^2.4.1",
     "steam": "git+https://github.com/seishun/node-steam.git"
   }
 }
