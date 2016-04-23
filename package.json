@@ -19,6 +19,7 @@
   "dependencies": {
     "dota2": "git://github.com/RJacksonm1/node-dota2",
     "jasmine": "^2.4.1",
+    "prompt": "^1.0.0",
     "steam": "git+https://github.com/seishun/node-steam.git"
   }
 }

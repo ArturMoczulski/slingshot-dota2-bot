@@ -1,19 +1,43 @@
 module.exports = function(steamCredentials) {
+            
+    var steam = require("steam"),
+        util = require("util"),
+        fs = require("fs"),
+        crypto = require("crypto"),
+        dota2 = require("dota2"),
+        steamClient = new steam.SteamClient(),
+        steamUser = new steam.SteamUser(steamClient),
+        steamFriends = new steam.SteamFriends(steamClient),
+        Dota2 = new dota2.Dota2Client(steamClient, true),
+        dota2bot = this;
     
     var dota2bot = {
         credentials: steamCredentials,
+        disconnect: function() {
+            Dota2.exit()
+            steamClient.disconnect()
+            console.log("Disconnected from steam")
+        },
+        inviteToLobby: function(players) {
+            players.forEach(function(steamId) {
+                Dota2.inviteToLobby(steamId)
+                console.log("Invited SteamID:"+steamId+" to a new lobby")
+            })
+        },
+        leaveLobby: function(players) {
+            players.forEach(function(steamId) {
+                Dota2.practiceLobbyKick(parseInt(steamId))
+                console.log("Kicked player "+steamId)
+            })
+            Dota2.abandonCurrentGame()
+            Dota2.leavePracticeLobby()
+            console.log("Left lobby")
+        },
+        launchLobby: function() {
+            Dota2.launchPracticeLobby()
+            console.log("Game started")
+        },
         connect: function(onReady) {
-            
-            var steam = require("steam"),
-                util = require("util"),
-                fs = require("fs"),
-                crypto = require("crypto"),
-                dota2 = require("dota2"),
-                steamClient = new steam.SteamClient(),
-                steamUser = new steam.SteamUser(steamClient),
-                steamFriends = new steam.SteamFriends(steamClient),
-                Dota2 = new dota2.Dota2Client(steamClient, true),
-                dota2bot = this;
             
             var onSteamLogOn = function onSteamLogOn(logonResp) {
                     if (logonResp.eresult == steam.EResult.OK) {
@@ -29,7 +53,7 @@ module.exports = function(steamCredentials) {
                             console.log("Node-dota2 unready.");
                         });
                         Dota2.on("chatMessage", function(channel, personaName, message) {
-                            // util.log([channel, personaName, message].join(", "));
+                            util.log([channel, personaName, message].join(", "));
                         });
                         Dota2.on("guildInvite", function(guildId, guildName, inviter) {
                             // Dota2.setGuildAccountRole(guildId, 75028261, 3);
@@ -38,6 +62,9 @@ module.exports = function(steamCredentials) {
                             util.log("UNHANDLED MESSAGE " + kMsg);
                         });
                         // setTimeout(function(){ Dota2.exit(); }, 5000);
+                        Dota2.on('practiceLobbyUpdate', function(lobby) {
+                            console.info(lobby)
+                        });
                     }
                 },
                 onSteamServers = function onSteamServers(servers) {
