@@ -1,10 +1,8 @@
 var botCredentials = require('./botConfig.js'),
-    testBotCredentials = require('./testBotConfig.js'),
-    CreateLobbyeBot = require('./CreateLobbyBot.js')
+    CreateLobbyBot = require('./CreateLobbyBot.js')
     
-var bot = CreateLobbyBot(botCredentials),
-    testBot = JoinLobbyBot(testBotCredentials)
+var bot = CreateLobbyBot(botCredentials)
     
-bot.createLobby(function(client) {
-    testBot.joinLobby()
+bot.createLobby(function(client, lobby) {
+    console.log(lobby)
 })
