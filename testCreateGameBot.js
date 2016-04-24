@@ -17,9 +17,15 @@ var createLobby = function() {
     },
     connect = function(clbk) {
         bot.connect(clbk)
+    },
+    matchInfo = function() {
+        bot.matchInfo()
     }
     
-var players = ["76561198011392455"]
+var players = [
+    "76561198011392455", // Artur
+    "76561198297919708", // Jordon
+]
 
 prompt.start()
 
@@ -32,6 +38,7 @@ function ContinuousPrompt() {
             case 'invitePlayers': invitePlayers(players); break;
             case 'disconnect': bot.disconnect(); break;
             case 'launch': bot.launchLobby(); break;
+            case 'match': matchInfo(); break;
         }
         ContinuousPrompt()
     })

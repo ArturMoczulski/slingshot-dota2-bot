@@ -13,6 +13,18 @@ module.exports = function(steamCredentials) {
     
     var dota2bot = {
         credentials: steamCredentials,
+        dota2client: Dota2,
+        matchId: null,
+        matchInfo: function() {
+            if(this.matchId) {
+                console.info("requesting details for match "+this.matchId+"...")
+                Dota2.requestMatchDetails(this.matchId, function(err, match) {
+                    console.info(match)
+                })
+            } else {
+                console.error("Bot not in a match yet")
+            }
+        },
         disconnect: function() {
             Dota2.exit()
             steamClient.disconnect()
@@ -36,6 +48,33 @@ module.exports = function(steamCredentials) {
         launchLobby: function() {
             Dota2.launchPracticeLobby()
             console.log("Game started")
+        },
+        createLobby: function(lobbyName, password, lobbyReady) {
+            Dota2.on('practiceLobbyUpdate', function(lobby) {
+                console.info('Lobby ready: '+lobby.lobby_id)
+                lobbyReady(Dota2, lobby)
+            });
+            
+            Dota2.createPracticeLobby(password,
+                                        {"game_name": lobbyName,
+                                        "server_region": dota2.ServerRegion.USWEST,
+                                        "game_mode": dota2.schema.DOTA_GameMode.DOTA_GAMEMODE_AR,
+                                        "series_type": 2,
+                                        "game_version": 1,
+                                        "allow_cheats": false,
+                                        "fill_with_bots": true,
+                                        "allow_spectating": true,
+                                        "pass_key": password,
+                                        "radiant_series_wins": 0,
+                                        "dire_series_wins": 0,
+                                        "allchat": true
+                                        },
+                                        function(err, body){
+                                            if(err) {
+                                                console.error("Couldn't create a lobby.");
+                                            }
+                                        });
+            Dota2.joinPracticeLobbyTeam(1, dota2.DOTA_GC_TEAM_SPECTATOR)
         },
         connect: function(onReady) {
             
@@ -64,6 +103,10 @@ module.exports = function(steamCredentials) {
                         // setTimeout(function(){ Dota2.exit(); }, 5000);
                         Dota2.on('practiceLobbyUpdate', function(lobby) {
                             console.info(lobby)
+                            if(lobby.match_id) {
+                                dota2bot.matchId = lobby.match_id
+                                console.info("Match id: "+lobby.match_id.toString())
+                            }
                         });
                     }
                 },
